@@ -1,5 +1,7 @@
 package com.example.cp3406_a3_edu_app
 
+import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.SpaceQuestion
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +13,16 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun quizScorer_recognisesCorrectAndIncorrectAnswers() {
+        val question = SpaceQuestion(
+            id = 1,
+            prompt = "Test",
+            answers = listOf("Wrong", "Correct"),
+            correctAnswerIndex = 1,
+            explanation = "Test explanation"
+        )
+
+        assertTrue(QuizScorer.isCorrect(question, 1))
+        assertFalse(QuizScorer.isCorrect(question, 0))
     }
 }
