@@ -1,14 +1,29 @@
 package com.example.cp3406_a3_edu_app.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cp3406_a3_edu_app.data.ApodRepository
 import com.example.cp3406_a3_edu_app.data.AstronomyRepository
 import com.example.cp3406_a3_edu_app.data.DemoAstronomyRepository
 import com.example.cp3406_a3_edu_app.data.LearningStats
+import com.example.cp3406_a3_edu_app.data.NetworkApodRepository
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
+import com.example.cp3406_a3_edu_app.data.network.NasaApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+sealed interface ApodUiState {
+    data object Loading : ApodUiState
+    data class Success(val photo: ApodPhoto) : ApodUiState
+    data object Error : ApodUiState
+}
 
 data class AstronomyUiState(
     val questionIndex: Int = 0,
@@ -20,12 +35,32 @@ data class AstronomyUiState(
 )
 
 class AstronomyViewModel(
-    private val repository: AstronomyRepository = DemoAstronomyRepository()
+    private val repository: AstronomyRepository = DemoAstronomyRepository(),
+    private val apodRepository: ApodRepository =
+        NetworkApodRepository(NasaApi.retrofitService)
 ) : ViewModel() {
     val questions = repository.questions()
 
+    var apodUiState: ApodUiState by mutableStateOf(ApodUiState.Loading)
+        private set
+
     private val _uiState = MutableStateFlow(AstronomyUiState())
     val uiState: StateFlow<AstronomyUiState> = _uiState.asStateFlow()
+
+    init {
+        loadAstronomyPicture()
+    }
+
+    fun loadAstronomyPicture() {
+        apodUiState = ApodUiState.Loading
+        viewModelScope.launch {
+            apodUiState = try {
+                ApodUiState.Success(apodRepository.getTodayPicture())
+            } catch (exception: Exception) {
+                ApodUiState.Error
+            }
+        }
+    }
 
     fun selectAnswer(index: Int) {
         if (!_uiState.value.answerSubmitted) {

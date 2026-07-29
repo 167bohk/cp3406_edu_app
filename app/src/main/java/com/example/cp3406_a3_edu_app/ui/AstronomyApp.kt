@@ -1,9 +1,11 @@
 package com.example.cp3406_a3_edu_app.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -24,13 +27,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.cp3406_a3_edu_app.data.LearningStats
+import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
 
 private data class NavItem(
     val route: String,
@@ -78,6 +85,8 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             composable("home") {
                 HomeScreen(
                     stats = uiState.stats,
+                    apodUiState = viewModel.apodUiState,
+                    onRetry = viewModel::loadAstronomyPicture,
                     onStartQuiz = { navController.navigate("quiz") }
                 )
             }
@@ -107,6 +116,8 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
 @Composable
 private fun HomeScreen(
     stats: LearningStats,
+    apodUiState: ApodUiState,
+    onRetry: () -> Unit,
     onStartQuiz: () -> Unit
 ) {
     LazyColumn(
@@ -121,6 +132,20 @@ private fun HomeScreen(
                 fontWeight = FontWeight.Bold
             )
             Text("Learn basic astronomy through short quizzes.")
+        }
+
+        item {
+            Text(
+                text = "Astronomy Picture of the Day",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            when (apodUiState) {
+                is ApodUiState.Loading -> ApodLoadingCard()
+                is ApodUiState.Success -> ApodCard(apodUiState.photo)
+                is ApodUiState.Error -> ApodErrorCard(onRetry)
+            }
         }
 
         item {
@@ -163,6 +188,92 @@ private fun HomeScreen(
             Text("• The Solar System")
             Text("• Stars and galaxies")
             Text("• Space exploration")
+        }
+    }
+}
+
+@Composable
+private fun ApodLoadingCard() {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+private fun ApodErrorCard(onRetry: () -> Unit) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("Unable to load today's picture.")
+            Text(
+                text = "Check the internet connection and try again.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Button(onClick = onRetry) {
+                Text("Retry")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ApodCard(photo: ApodPhoto) {
+    val imageUrl =
+        if (photo.mediaType == "image") photo.url else photo.thumbnailUrl
+
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column {
+            if (imageUrl != null) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = photo.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Text(
+                    text = "Today's NASA item is a video.",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    text = photo.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = photo.date,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = photo.explanation,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
+                photo.copyright?.let {
+                    Text(
+                        text = "Credit: $it",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
 }
