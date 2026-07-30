@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cp3406_a3_edu_app.data.ApodRepository
 import com.example.cp3406_a3_edu_app.data.AstronomyRepository
-import com.example.cp3406_a3_edu_app.data.DemoAstronomyRepository
 import com.example.cp3406_a3_edu_app.data.LearningStats
-import com.example.cp3406_a3_edu_app.data.NetworkApodRepository
+import com.example.cp3406_a3_edu_app.data.QuizAttemptRepository
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.local.QuizAttempt
 import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
-import com.example.cp3406_a3_edu_app.data.network.NasaApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,14 +29,15 @@ data class AstronomyUiState(
     val selectedAnswer: Int? = null,
     val answerSubmitted: Boolean = false,
     val stats: LearningStats = LearningStats(),
+    val recentAttempts: List<QuizAttempt> = emptyList(),
     val soundEnabled: Boolean = true,
     val difficulty: String = "Medium"
 )
 
 class AstronomyViewModel(
-    private val repository: AstronomyRepository = DemoAstronomyRepository(),
-    private val apodRepository: ApodRepository =
-        NetworkApodRepository(NasaApi.retrofitService)
+    private val repository: AstronomyRepository,
+    private val apodRepository: ApodRepository,
+    private val quizAttemptRepository: QuizAttemptRepository
 ) : ViewModel() {
     val questions = repository.questions()
 
@@ -49,6 +49,21 @@ class AstronomyViewModel(
 
     init {
         loadAstronomyPicture()
+        observeQuizHistory()
+    }
+
+    private fun observeQuizHistory() {
+        viewModelScope.launch {
+            quizAttemptRepository.getStatsStream().collect { stats ->
+                _uiState.update { it.copy(stats = stats) }
+            }
+        }
+
+        viewModelScope.launch {
+            quizAttemptRepository.getRecentAttemptsStream().collect { attempts ->
+                _uiState.update { it.copy(recentAttempts = attempts) }
+            }
+        }
     }
 
     fun loadAstronomyPicture() {
@@ -72,13 +87,21 @@ class AstronomyViewModel(
         val state = _uiState.value
         val selected = state.selectedAnswer ?: return
         if (state.answerSubmitted) return
-        val correct = QuizScorer.isCorrect(questions[state.questionIndex], selected)
+        val question = questions[state.questionIndex]
+        val correct = QuizScorer.isCorrect(question, selected)
+
         _uiState.update {
-            it.copy(
-                answerSubmitted = true,
-                stats = it.stats.copy(
-                    correctAnswers = it.stats.correctAnswers + if (correct) 1 else 0,
-                    totalAnswers = it.stats.totalAnswers + 1
+            it.copy(answerSubmitted = true)
+        }
+
+        viewModelScope.launch {
+            quizAttemptRepository.insertAttempt(
+                QuizAttempt(
+                    questionId = question.id,
+                    questionText = question.prompt,
+                    isCorrect = correct,
+                    completedQuiz = state.questionIndex == questions.lastIndex,
+                    answeredAt = System.currentTimeMillis()
                 )
             )
         }
@@ -90,13 +113,7 @@ class AstronomyViewModel(
             it.copy(
                 questionIndex = if (isLast) 0 else it.questionIndex + 1,
                 selectedAnswer = null,
-                answerSubmitted = false,
-                stats = if (isLast) {
-                    it.stats.copy(
-                        completedQuizzes = it.stats.completedQuizzes + 1,
-                        currentStreak = it.stats.currentStreak + 1
-                    )
-                } else it.stats
+                answerSubmitted = false
             )
         }
     }

@@ -37,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.cp3406_a3_edu_app.data.LearningStats
+import com.example.cp3406_a3_edu_app.data.local.QuizAttempt
 import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
 
 private data class NavItem(
@@ -99,7 +100,10 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             }
 
             composable("stats") {
-                StatsScreen(stats = uiState.stats)
+                StatsScreen(
+                    stats = uiState.stats,
+                    recentAttempts = uiState.recentAttempts
+                )
             }
 
             composable("settings") {
@@ -356,29 +360,75 @@ private fun QuizScreen(
 }
 
 @Composable
-private fun StatsScreen(stats: LearningStats) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+private fun StatsScreen(
+    stats: LearningStats,
+    recentAttempts: List<QuizAttempt>
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = "Learning Statistics",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
+        item {
+            Text(
+                text = "Learning Statistics",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
-        StatItem("Completed quizzes", stats.completedQuizzes.toString())
-        StatItem("Correct answers", stats.correctAnswers.toString())
-        StatItem("Total answers", stats.totalAnswers.toString())
-        StatItem("Accuracy", "${stats.accuracy}%")
-        StatItem("Learning streak", "${stats.currentStreak} days")
+        item { StatItem("Completed quizzes", stats.completedQuizzes.toString()) }
+        item { StatItem("Correct answers", stats.correctAnswers.toString()) }
+        item { StatItem("Total answers", stats.totalAnswers.toString()) }
+        item { StatItem("Accuracy", "${stats.accuracy}%") }
 
-        Text(
-            text = "The starter version only keeps progress while the app is open.",
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        item {
+            Text(
+                text = "Recent Answers",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
+        if (recentAttempts.isEmpty()) {
+            item {
+                Text(
+                    text = "Complete a question to start your history.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            itemsIndexed(recentAttempts) { _, attempt ->
+                AttemptItem(attempt)
+            }
+        }
+    }
+}
+
+@Composable
+private fun AttemptItem(attempt: QuizAttempt) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = if (attempt.isCorrect) "Correct" else "Incorrect",
+                color = if (attempt.isCorrect) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.tertiary
+                },
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = attempt.questionText,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
