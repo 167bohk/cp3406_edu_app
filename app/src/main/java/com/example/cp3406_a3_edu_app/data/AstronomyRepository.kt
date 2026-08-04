@@ -5,7 +5,9 @@ data class SpaceQuestion(
     val prompt: String,
     val answers: List<String>,
     val correctAnswerIndex: Int,
-    val explanation: String
+    val explanation: String,
+    val topic: String = "General",
+    val sourceUrl: String = ""
 )
 
 data class LearningStats(
@@ -20,36 +22,12 @@ data class LearningStats(
 
 interface AstronomyRepository {
     fun questions(): List<SpaceQuestion>
+    fun learningTopics(): List<LearningTopic>
 }
 
-/**
- * Offline starter data. A later Room + network repository can implement the same
- * interface without changing the screens or ViewModel contract.
- */
 class DemoAstronomyRepository : AstronomyRepository {
-    override fun questions() = listOf(
-        SpaceQuestion(
-            id = 1,
-            prompt = "Which planet is known as the Red Planet?",
-            answers = listOf("Venus", "Mars", "Jupiter", "Mercury"),
-            correctAnswerIndex = 1,
-            explanation = "Iron minerals in the Martian soil oxidise, giving Mars its red colour."
-        ),
-        SpaceQuestion(
-            id = 2,
-            prompt = "What is the name of our galaxy?",
-            answers = listOf("Andromeda", "Whirlpool", "Milky Way", "Sombrero"),
-            correctAnswerIndex = 2,
-            explanation = "The Solar System is located in the Milky Way galaxy."
-        ),
-        SpaceQuestion(
-            id = 3,
-            prompt = "Which object has the strongest gravity?",
-            answers = listOf("Moon", "Comet", "Asteroid", "Black hole"),
-            correctAnswerIndex = 3,
-            explanation = "A black hole concentrates enormous mass into a very small region."
-        )
-    )
+    override fun questions() = QuestionBank.questions
+    override fun learningTopics() = LearningContent.topics
 }
 
 object QuizScorer {

@@ -1,6 +1,8 @@
 package com.example.cp3406_a3_edu_app
 
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.QuestionBank
+import com.example.cp3406_a3_edu_app.data.LearningContent
 import com.example.cp3406_a3_edu_app.data.SpaceQuestion
 import org.junit.Test
 
@@ -24,5 +26,38 @@ class ExampleUnitTest {
 
         assertTrue(QuizScorer.isCorrect(question, 1))
         assertFalse(QuizScorer.isCorrect(question, 0))
+    }
+
+    @Test
+    fun questionBank_hasValidQuestions() {
+        val questions = QuestionBank.questions
+
+        assertEquals(32, questions.size)
+        assertEquals(questions.size, questions.map { it.id }.distinct().size)
+
+        questions.forEach { question ->
+            assertEquals(4, question.answers.size)
+            assertTrue(question.correctAnswerIndex in question.answers.indices)
+            assertTrue(question.sourceUrl.startsWith("https://science.nasa.gov/"))
+        }
+    }
+
+    @Test
+    fun learningContent_hasFactsAndSources() {
+        assertEquals(9, LearningContent.topics.size)
+
+        LearningContent.topics.forEach { topic ->
+            assertTrue(topic.facts.isNotEmpty())
+            assertTrue(topic.sourceUrl.startsWith("https://science.nasa.gov/"))
+        }
+    }
+
+    @Test
+    fun learningContent_coversEveryQuizQuestion() {
+        val quizQuestionIds = QuestionBank.questions.map { it.id }.toSet()
+        val coveredQuestionIds = LearningContent.topics.flatMap { it.questionIds }
+
+        assertEquals(quizQuestionIds, coveredQuestionIds.toSet())
+        assertEquals(coveredQuestionIds.size, coveredQuestionIds.distinct().size)
     }
 }

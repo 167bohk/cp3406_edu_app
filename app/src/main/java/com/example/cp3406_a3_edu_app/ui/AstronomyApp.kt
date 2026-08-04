@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -22,12 +23,17 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.cp3406_a3_edu_app.data.LearningTopic
 import com.example.cp3406_a3_edu_app.data.LearningStats
 import com.example.cp3406_a3_edu_app.data.local.QuizAttempt
 import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
@@ -47,6 +54,7 @@ private data class NavItem(
 
 private val navItems = listOf(
     NavItem("home", "Home"),
+    NavItem("learn", "Learn"),
     NavItem("quiz", "Quiz"),
     NavItem("stats", "Stats"),
     NavItem("settings", "Settings")
@@ -88,8 +96,13 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
                     stats = uiState.stats,
                     apodUiState = viewModel.apodUiState,
                     onRetry = viewModel::loadAstronomyPicture,
+                    onOpenLearning = { navController.navigate("learn") },
                     onStartQuiz = { navController.navigate("quiz") }
                 )
+            }
+
+            composable("learn") {
+                LearningScreen(viewModel.learningTopics)
             }
 
             composable("quiz") {
@@ -122,6 +135,7 @@ private fun HomeScreen(
     stats: LearningStats,
     apodUiState: ApodUiState,
     onRetry: () -> Unit,
+    onOpenLearning: () -> Unit,
     onStartQuiz: () -> Unit
 ) {
     LazyColumn(
@@ -135,7 +149,7 @@ private fun HomeScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-            Text("Learn basic astronomy through short quizzes.")
+            Text("Learn basic astronomy through short lessons and quizzes.")
         }
 
         item {
@@ -162,7 +176,7 @@ private fun HomeScreen(
                         text = "Solar System Quiz",
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text("Answer three questions about planets and space.")
+                    Text("Answer five random questions about astronomy.")
                     Button(
                         onClick = onStartQuiz,
                         modifier = Modifier.fillMaxWidth()
@@ -184,14 +198,90 @@ private fun HomeScreen(
         }
 
         item {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Learning Library",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text("Read nine short lessons before testing your knowledge.")
+                    OutlinedButton(
+                        onClick = onOpenLearning,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Open Lessons")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LearningScreen(topics: List<LearningTopic>) {
+    var expandedTopicId by rememberSaveable { mutableStateOf<Int?>(null) }
+    val uriHandler = LocalUriHandler.current
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
             Text(
-                text = "Future Topics",
-                style = MaterialTheme.typography.titleMedium,
+                text = "Learning Library",
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-            Text("• The Solar System")
-            Text("• Stars and galaxies")
-            Text("• Space exploration")
+            Text("Choose a topic and read its key facts.")
+        }
+
+        items(topics, key = { it.id }) { topic ->
+            val isExpanded = expandedTopicId == topic.id
+
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = topic.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(topic.summary)
+
+                    if (topic.questionIds.isNotEmpty()) {
+                        Text(
+                            text = "Covers ${topic.questionIds.size} quiz questions",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    if (isExpanded) {
+                        topic.facts.forEach { fact ->
+                            Text("• $fact")
+                        }
+
+                        TextButton(onClick = { uriHandler.openUri(topic.sourceUrl) }) {
+                            Text("Read the NASA source")
+                        }
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            expandedTopicId = if (isExpanded) null else topic.id
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (isExpanded) "Show Less" else "Start Reading")
+                    }
+                }
+            }
         }
     }
 }

@@ -39,7 +39,8 @@ class AstronomyViewModel(
     private val apodRepository: ApodRepository,
     private val quizAttemptRepository: QuizAttemptRepository
 ) : ViewModel() {
-    val questions = repository.questions()
+    val questions = repository.questions().shuffled().take(5)
+    val learningTopics = repository.learningTopics()
 
     var apodUiState: ApodUiState by mutableStateOf(ApodUiState.Loading)
         private set

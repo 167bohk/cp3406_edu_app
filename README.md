@@ -5,12 +5,16 @@ Compose for CP3406 Assessment 3.
 
 ## Current features
 
-- Four main screens: Home, Quiz, Statistics, and Settings
+- Five main screens: Home, Learn, Quiz, Statistics, and Settings
+- Nine offline astronomy lessons with expandable fact cards
+- Learning topics cover all 32 questions in the quiz bank
+- Links from each lesson to its NASA Science source
 - NASA Astronomy Picture of the Day on the Home screen
 - Retrofit and kotlinx.serialization for the NASA web service
 - Coil for loading the daily image
 - Loading, success, and error states with a retry button
-- A short astronomy quiz with explanations
+- A bank of 32 astronomy questions with explanations
+- Five randomly selected questions in each quiz
 - Room database storage for every quiz answer
 - Persistent accuracy, answer totals, and completed quiz statistics
 - A list of the ten most recent answers
@@ -50,6 +54,16 @@ as `Flow`, so the Statistics screen updates after a new answer is saved.
 The daily image and description come from the NASA APOD API:
 https://api.nasa.gov/
 
+The offline quiz questions were checked against NASA Science pages covering:
+
+- planets and Solar System facts
+- Moon facts, Moon phases, and eclipses
+- asteroids, comets, and meteors
+- galaxies and black holes
+
+Each question keeps its NASA source URL in `QuestionBank.kt`, so its answer can
+be checked or updated later.
+
 The starter version uses NASA's `DEMO_KEY`, which has a low request limit.
 A personal NASA API key should be supplied through local build configuration
 before the app is distributed.
@@ -70,5 +84,5 @@ gradlew.bat :app:testDebugUnitTest
 
 1. Add Room storage for saved APOD items.
 2. Add Preferences DataStore for settings.
-3. Add a planet knowledge section.
+3. Add lesson completion tracking.
 4. Add repository, DAO, ViewModel, and Compose UI tests.
