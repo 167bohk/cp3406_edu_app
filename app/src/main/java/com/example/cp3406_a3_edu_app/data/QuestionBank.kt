@@ -2,9 +2,16 @@ package com.example.cp3406_a3_edu_app.data
 
 object QuestionBank {
     private const val PLANET_SOURCE = "https://science.nasa.gov/solar-system/planets/"
+    private const val MERCURY_SOURCE = "https://science.nasa.gov/mercury/facts/"
+    private const val VENUS_SOURCE = "https://science.nasa.gov/venus/venus-facts/"
+    private const val EARTH_SOURCE = "https://science.nasa.gov/earth/facts/"
     private const val SOLAR_SYSTEM_SOURCE =
         "https://science.nasa.gov/solar-system/solar-system-facts/"
     private const val MARS_SOURCE = "https://science.nasa.gov/mars/facts/"
+    private const val JUPITER_SOURCE = "https://science.nasa.gov/jupiter/jupiter-facts/"
+    private const val SATURN_SOURCE = "https://science.nasa.gov/saturn/facts/"
+    private const val URANUS_SOURCE = "https://science.nasa.gov/uranus/facts/"
+    private const val NEPTUNE_SOURCE = "https://science.nasa.gov/neptune/neptune-facts/"
     private const val MOON_SOURCE = "https://science.nasa.gov/moon/facts/"
     private const val MOON_PHASE_SOURCE = "https://science.nasa.gov/moon/moon-phases/"
     private const val ECLIPSE_SOURCE = "https://science.nasa.gov/moon/eclipses/"
@@ -347,6 +354,119 @@ object QuestionBank {
             explanation = "Many short-period comets come from the Kuiper Belt beyond Neptune.",
             topic = "Small Bodies",
             sourceUrl = COMET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 33,
+            prompt = "Which planet travels around the Sun fastest?",
+            answers = listOf("Mercury", "Venus", "Earth", "Mars"),
+            correctAnswerIndex = 0,
+            explanation = "Mercury completes an orbit in only 88 Earth days.",
+            topic = "Planets",
+            sourceUrl = MERCURY_SOURCE
+        ),
+        SpaceQuestion(
+            id = 34,
+            prompt = "Which statement about Mercury is correct?",
+            answers = listOf(
+                "It has bright rings",
+                "It has two moons",
+                "It has no moons or rings",
+                "It is the hottest planet"
+            ),
+            correctAnswerIndex = 2,
+            explanation = "Mercury has no moons and no rings.",
+            topic = "Planets",
+            sourceUrl = MERCURY_SOURCE
+        ),
+        SpaceQuestion(
+            id = 35,
+            prompt = "On which planet is one day longer than one year?",
+            answers = listOf("Mars", "Venus", "Jupiter", "Neptune"),
+            correctAnswerIndex = 1,
+            explanation = "Venus rotates in 243 Earth days but orbits the Sun in 225 days.",
+            topic = "Planets",
+            sourceUrl = VENUS_SOURCE
+        ),
+        SpaceQuestion(
+            id = 36,
+            prompt = "Which planet rotates backward compared with most planets?",
+            answers = listOf("Earth", "Mars", "Venus", "Jupiter"),
+            correctAnswerIndex = 2,
+            explanation = "Venus rotates in the opposite direction from most planets.",
+            topic = "Planets",
+            sourceUrl = VENUS_SOURCE
+        ),
+        SpaceQuestion(
+            id = 37,
+            prompt = "Which planet is known to have liquid water on its surface?",
+            answers = listOf("Earth", "Mercury", "Venus", "Saturn"),
+            correctAnswerIndex = 0,
+            explanation = "Earth is the only planet known to have stable liquid water on its surface.",
+            topic = "Planets",
+            sourceUrl = EARTH_SOURCE
+        ),
+        SpaceQuestion(
+            id = 38,
+            prompt = "What is a Martian day called?",
+            answers = listOf("A luna", "A sol", "A jovian", "A phase"),
+            correctAnswerIndex = 1,
+            explanation = "A day on Mars is called a sol and lasts about 24.6 hours.",
+            topic = "Planets",
+            sourceUrl = MARS_SOURCE
+        ),
+        SpaceQuestion(
+            id = 39,
+            prompt = "Which planet has the shortest day?",
+            answers = listOf("Earth", "Mars", "Jupiter", "Saturn"),
+            correctAnswerIndex = 2,
+            explanation = "Jupiter rotates once in about 9.9 hours, the shortest planetary day.",
+            topic = "Planets",
+            sourceUrl = JUPITER_SOURCE
+        ),
+        SpaceQuestion(
+            id = 40,
+            prompt = "What is Jupiter's Great Red Spot?",
+            answers = listOf("A volcano", "A giant storm", "A frozen lake", "An impact crater"),
+            correctAnswerIndex = 1,
+            explanation = "The Great Red Spot is a giant storm that is wider than Earth.",
+            topic = "Planets",
+            sourceUrl = JUPITER_SOURCE
+        ),
+        SpaceQuestion(
+            id = 41,
+            prompt = "What are Saturn's rings mainly made of?",
+            answers = listOf("Ice and rock", "Liquid water", "Hot lava", "Clouds only"),
+            correctAnswerIndex = 0,
+            explanation = "Saturn's rings contain countless pieces of ice and rock.",
+            topic = "Planets",
+            sourceUrl = SATURN_SOURCE
+        ),
+        SpaceQuestion(
+            id = 42,
+            prompt = "Which planet rotates almost on its side?",
+            answers = listOf("Mercury", "Earth", "Uranus", "Neptune"),
+            correctAnswerIndex = 2,
+            explanation = "Uranus has an extreme axial tilt of about 98 degrees.",
+            topic = "Planets",
+            sourceUrl = URANUS_SOURCE
+        ),
+        SpaceQuestion(
+            id = 43,
+            prompt = "About how long is one year on Neptune?",
+            answers = listOf("12 Earth years", "29 Earth years", "84 Earth years", "165 Earth years"),
+            correctAnswerIndex = 3,
+            explanation = "Neptune takes about 165 Earth years to orbit the Sun.",
+            topic = "Planets",
+            sourceUrl = NEPTUNE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 44,
+            prompt = "About how long does sunlight take to reach Neptune?",
+            answers = listOf("Eight minutes", "One hour", "Four hours", "One day"),
+            correctAnswerIndex = 2,
+            explanation = "At Neptune's average distance, sunlight takes about four hours to arrive.",
+            topic = "Planets",
+            sourceUrl = NEPTUNE_SOURCE
         )
     )
 }

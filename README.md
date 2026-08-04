@@ -7,13 +7,15 @@ Compose for CP3406 Assessment 3.
 
 - Five main screens: Home, Learn, Quiz, Statistics, and Settings
 - Nine offline astronomy lessons with expandable fact cards
-- Learning topics cover all 32 questions in the quiz bank
+- Learning topics and planet profiles cover all 44 questions in the quiz bank
+- An animated, tappable Solar System model
+- Basic information and fun facts for all eight planets
 - Links from each lesson to its NASA Science source
 - NASA Astronomy Picture of the Day on the Home screen
 - Retrofit and kotlinx.serialization for the NASA web service
 - Coil for loading the daily image
 - Loading, success, and error states with a retry button
-- A bank of 32 astronomy questions with explanations
+- A bank of 44 astronomy questions with explanations
 - Five randomly selected questions in each quiz
 - Room database storage for every quiz answer
 - Persistent accuracy, answer totals, and completed quiz statistics

@@ -72,7 +72,8 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             NavigationBar {
                 navItems.forEach { item ->
                     NavigationBarItem(
-                        selected = currentRoute == item.route,
+                        selected = currentRoute == item.route ||
+                            (item.route == "learn" && currentRoute == "solar_system"),
                         onClick = {
                             navController.navigate(item.route) {
                                 popUpTo("home")
@@ -102,7 +103,17 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             }
 
             composable("learn") {
-                LearningScreen(viewModel.learningTopics)
+                LearningScreen(
+                    topics = viewModel.learningTopics,
+                    onOpenSolarSystem = { navController.navigate("solar_system") }
+                )
+            }
+
+            composable("solar_system") {
+                SolarSystemScreen(
+                    planets = viewModel.planets,
+                    onBack = { navController.navigateUp() }
+                )
             }
 
             composable("quiz") {
@@ -221,7 +232,10 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun LearningScreen(topics: List<LearningTopic>) {
+private fun LearningScreen(
+    topics: List<LearningTopic>,
+    onOpenSolarSystem: () -> Unit
+) {
     var expandedTopicId by rememberSaveable { mutableStateOf<Int?>(null) }
     val uriHandler = LocalUriHandler.current
 
@@ -237,6 +251,33 @@ private fun LearningScreen(topics: List<LearningTopic>) {
                 fontWeight = FontWeight.Bold
             )
             Text("Choose a topic and read its key facts.")
+        }
+
+        item {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Interactive Solar System",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text("Watch the planets orbit and tap each one to learn more.")
+                    Text(
+                        text = "Covers 12 quiz questions",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Button(
+                        onClick = onOpenSolarSystem,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Explore the Model")
+                    }
+                }
+            }
         }
 
         items(topics, key = { it.id }) { topic ->

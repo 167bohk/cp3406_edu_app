@@ -3,6 +3,7 @@ package com.example.cp3406_a3_edu_app
 import com.example.cp3406_a3_edu_app.data.QuizScorer
 import com.example.cp3406_a3_edu_app.data.QuestionBank
 import com.example.cp3406_a3_edu_app.data.LearningContent
+import com.example.cp3406_a3_edu_app.data.PlanetCatalog
 import com.example.cp3406_a3_edu_app.data.SpaceQuestion
 import org.junit.Test
 
@@ -32,7 +33,7 @@ class ExampleUnitTest {
     fun questionBank_hasValidQuestions() {
         val questions = QuestionBank.questions
 
-        assertEquals(32, questions.size)
+        assertEquals(44, questions.size)
         assertEquals(questions.size, questions.map { it.id }.distinct().size)
 
         questions.forEach { question ->
@@ -53,11 +54,27 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun learningContent_coversEveryQuizQuestion() {
+    fun learningMaterials_coverEveryQuizQuestion() {
         val quizQuestionIds = QuestionBank.questions.map { it.id }.toSet()
-        val coveredQuestionIds = LearningContent.topics.flatMap { it.questionIds }
+        val lessonQuestionIds = LearningContent.topics.flatMap { it.questionIds }
+        val planetQuestionIds = PlanetCatalog.planets.flatMap { it.questionIds }
+        val coveredQuestionIds = lessonQuestionIds + planetQuestionIds
 
         assertEquals(quizQuestionIds, coveredQuestionIds.toSet())
         assertEquals(coveredQuestionIds.size, coveredQuestionIds.distinct().size)
+    }
+
+    @Test
+    fun planetCatalog_containsEightValidPlanets() {
+        val planets = PlanetCatalog.planets
+
+        assertEquals(8, planets.size)
+        assertEquals((1..8).toList(), planets.map { it.orderFromSun })
+
+        planets.forEach { planet ->
+            assertTrue(planet.funFacts.isNotEmpty())
+            assertTrue(planet.orbitSpeed > 0)
+            assertTrue(planet.sourceUrl.startsWith("https://science.nasa.gov/"))
+        }
     }
 }

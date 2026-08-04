@@ -41,6 +41,7 @@ class AstronomyViewModel(
 ) : ViewModel() {
     val questions = repository.questions().shuffled().take(5)
     val learningTopics = repository.learningTopics()
+    val planets = repository.planets()
 
     var apodUiState: ApodUiState by mutableStateOf(ApodUiState.Loading)
         private set

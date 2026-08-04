@@ -23,11 +23,13 @@ data class LearningStats(
 interface AstronomyRepository {
     fun questions(): List<SpaceQuestion>
     fun learningTopics(): List<LearningTopic>
+    fun planets(): List<PlanetInfo>
 }
 
 class DemoAstronomyRepository : AstronomyRepository {
     override fun questions() = QuestionBank.questions
     override fun learningTopics() = LearningContent.topics
+    override fun planets() = PlanetCatalog.planets
 }
 
 object QuizScorer {
