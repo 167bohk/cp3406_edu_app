@@ -33,7 +33,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/mercury/facts/",
             orbitSpeed = 4.2f,
             displaySize = 4f,
-            questionIds = listOf(33, 34)
+            questionIds = listOf(3, 7, 11, 33, 34)
         ),
         PlanetInfo(
             name = "Venus",
@@ -51,7 +51,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/venus/venus-facts/",
             orbitSpeed = 3.4f,
             displaySize = 5f,
-            questionIds = listOf(35, 36)
+            questionIds = listOf(4, 35, 36)
         ),
         PlanetInfo(
             name = "Earth",
@@ -69,7 +69,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/earth/facts/",
             orbitSpeed = 2.7f,
             displaySize = 5.5f,
-            questionIds = listOf(37)
+            questionIds = listOf(5, 37)
         ),
         PlanetInfo(
             name = "Mars",
@@ -87,7 +87,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/mars/facts/",
             orbitSpeed = 2.2f,
             displaySize = 4.5f,
-            questionIds = listOf(38)
+            questionIds = listOf(1, 38)
         ),
         PlanetInfo(
             name = "Jupiter",
@@ -105,7 +105,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/jupiter/jupiter-facts/",
             orbitSpeed = 1.5f,
             displaySize = 9f,
-            questionIds = listOf(39, 40)
+            questionIds = listOf(6, 8, 39, 40)
         ),
         PlanetInfo(
             name = "Saturn",
@@ -141,7 +141,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/uranus/facts/",
             orbitSpeed = 0.85f,
             displaySize = 6.5f,
-            questionIds = listOf(42)
+            questionIds = listOf(9, 42)
         ),
         PlanetInfo(
             name = "Neptune",
@@ -159,7 +159,7 @@ object PlanetCatalog {
             sourceUrl = "https://science.nasa.gov/neptune/neptune-facts/",
             orbitSpeed = 0.65f,
             displaySize = 6.5f,
-            questionIds = listOf(43, 44)
+            questionIds = listOf(10, 43, 44)
         )
     )
 }

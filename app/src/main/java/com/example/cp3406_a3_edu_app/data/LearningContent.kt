@@ -13,24 +13,6 @@ object LearningContent {
     val topics = listOf(
         LearningTopic(
             id = 1,
-            title = "The Planets",
-            summary = "Learn the order, size and main types of the eight planets.",
-            facts = listOf(
-                "Mars looks red because iron minerals in its soil oxidise.",
-                "Mercury is the closest planet to the Sun and also the smallest planet.",
-                "Venus is the hottest planet because its thick atmosphere traps heat.",
-                "Earth is the third planet from the Sun.",
-                "Jupiter is the largest planet in our Solar System.",
-                "Mercury, Venus, Earth and Mars are rocky planets.",
-                "Jupiter and Saturn are gas giants.",
-                "Uranus and Neptune are ice giants.",
-                "Neptune is the eighth and farthest planet from the Sun."
-            ),
-            sourceUrl = "https://science.nasa.gov/solar-system/planets/",
-            questionIds = listOf(1, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-        ),
-        LearningTopic(
-            id = 2,
             title = "The Solar System",
             summary = "See how our planetary system fits into the Milky Way.",
             facts = listOf(
@@ -42,7 +24,7 @@ object LearningContent {
             questionIds = listOf(12, 30, 31)
         ),
         LearningTopic(
-            id = 3,
+            id = 2,
             title = "Our Sun",
             summary = "The Sun is the star at the centre of our Solar System.",
             facts = listOf(
@@ -54,7 +36,7 @@ object LearningContent {
             sourceUrl = "https://science.nasa.gov/sun/facts/"
         ),
         LearningTopic(
-            id = 4,
+            id = 3,
             title = "The Moon",
             summary = "Learn about Earth's natural satellite and its changing appearance.",
             facts = listOf(
@@ -68,7 +50,7 @@ object LearningContent {
             questionIds = listOf(18, 19, 20, 21, 22)
         ),
         LearningTopic(
-            id = 5,
+            id = 4,
             title = "Solar and Lunar Eclipses",
             summary = "Compare the positions of the Sun, Earth and Moon during eclipses.",
             facts = listOf(
@@ -81,7 +63,7 @@ object LearningContent {
             questionIds = listOf(23, 24, 25, 26)
         ),
         LearningTopic(
-            id = 6,
+            id = 5,
             title = "Small Bodies",
             summary = "Compare dwarf planets, asteroids, comets and meteors.",
             facts = listOf(
@@ -96,7 +78,7 @@ object LearningContent {
             questionIds = listOf(13, 14, 15, 16, 17, 32)
         ),
         LearningTopic(
-            id = 7,
+            id = 6,
             title = "Stars and Galaxies",
             summary = "Travel beyond the Solar System to enormous groups of stars.",
             facts = listOf(
@@ -108,7 +90,7 @@ object LearningContent {
             questionIds = listOf(2, 27, 28)
         ),
         LearningTopic(
-            id = 8,
+            id = 7,
             title = "Black Holes",
             summary = "Explore regions where gravity is extremely strong.",
             facts = listOf(
@@ -120,7 +102,7 @@ object LearningContent {
             questionIds = listOf(29)
         ),
         LearningTopic(
-            id = 9,
+            id = 8,
             title = "Space Exploration",
             summary = "Discover how NASA missions study Earth, the Solar System and space.",
             facts = listOf(
@@ -132,7 +114,7 @@ object LearningContent {
             sourceUrl = "https://science.nasa.gov/science-missions/"
         ),
         LearningTopic(
-            id = 10,
+            id = 9,
             title = "Star Life Cycles",
             summary = "Follow a star from a cloud of gas to the end of its life.",
             facts = listOf(
@@ -147,7 +129,7 @@ object LearningContent {
             questionIds = listOf(45, 46, 47, 48, 49, 50)
         ),
         LearningTopic(
-            id = 11,
+            id = 10,
             title = "Exoplanets",
             summary = "Learn how scientists find planets beyond our Solar System.",
             facts = listOf(
@@ -161,7 +143,7 @@ object LearningContent {
             questionIds = listOf(51, 52, 53, 54, 55)
         ),
         LearningTopic(
-            id = 12,
+            id = 11,
             title = "Space Telescopes",
             summary = "Compare how Hubble and Webb observe the universe from space.",
             facts = listOf(

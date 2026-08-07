@@ -6,9 +6,9 @@ Compose for CP3406 Assessment 3.
 ## Current features
 
 - Five main screens: Home, Learn, Quiz, Statistics, and Settings
-- Twelve offline astronomy lessons with expandable fact cards
+- Eleven offline astronomy lessons with expandable fact cards
 - Learning topics and planet profiles cover all 60 questions in the quiz bank
-- An animated, tappable Solar System model
+- An animated, tappable Solar System model covering 22 quiz questions
 - Basic information and fun facts for all eight planets
 - Links from each lesson to its NASA Science source
 - NASA Astronomy Picture of the Day on the Home screen

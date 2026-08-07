@@ -228,7 +228,7 @@ private fun HomeScreen(
                         text = "Learning Library",
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text("Read twelve short lessons before testing your knowledge.")
+                    Text("Read eleven short lessons and explore the interactive model.")
                     OutlinedButton(
                         onClick = onOpenLearning,
                         modifier = Modifier.fillMaxWidth()
@@ -278,7 +278,7 @@ private fun LearningScreen(
                     )
                     Text("Watch the planets orbit and tap each one to learn more.")
                     Text(
-                        text = "Covers 12 quiz questions",
+                        text = "Covers 22 quiz questions",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )

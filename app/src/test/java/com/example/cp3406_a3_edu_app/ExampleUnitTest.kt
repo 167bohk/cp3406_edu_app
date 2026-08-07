@@ -60,7 +60,7 @@ class ExampleUnitTest {
 
     @Test
     fun learningContent_hasFactsAndSources() {
-        assertEquals(12, LearningContent.topics.size)
+        assertEquals(11, LearningContent.topics.size)
 
         LearningContent.topics.forEach { topic ->
             assertTrue(topic.facts.isNotEmpty())
@@ -85,6 +85,7 @@ class ExampleUnitTest {
 
         assertEquals(8, planets.size)
         assertEquals((1..8).toList(), planets.map { it.orderFromSun })
+        assertEquals(22, planets.flatMap { it.questionIds }.size)
 
         planets.forEach { planet ->
             assertTrue(planet.funFacts.isNotEmpty())

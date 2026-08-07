@@ -47,6 +47,18 @@ class ExampleInstrumentedTest {
     }
 
     @Test
+    fun solarSystemModel_containsPlanetLearningContent() {
+        composeTestRule.onNodeWithTag("nav_learn").performClick()
+        composeTestRule.onNodeWithText("Explore the Model").performClick()
+
+        composeTestRule.onNodeWithTag("solar_system_screen").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Planet groups").assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Rocky planets: Mercury, Venus, Earth and Mars.")
+            .assertIsDisplayed()
+    }
+
+    @Test
     fun settings_canSelectHardDifficulty() {
         composeTestRule.onNodeWithTag("nav_settings").performClick()
         composeTestRule.onNodeWithTag("difficulty_hard").performClick()
