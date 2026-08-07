@@ -23,7 +23,8 @@ Compose for CP3406 Assessment 3.
 - Persistent accuracy, answer totals, and completed quiz statistics
 - A list of the ten most recent answers
 - ViewModel, UI state, and repository classes
-- A unit test for the quiz scoring logic
+- Unit tests for quiz logic, question selection, and learning coverage
+- Compose UI tests for navigation, learning, settings, and quiz interaction
 
 ## Project structure
 
@@ -78,15 +79,21 @@ Open the project in Android Studio, sync the Gradle files, start an emulator,
 and run the `app` configuration. An internet connection is required for the
 daily NASA image, but the quiz and saved statistics work locally.
 
-To run the current unit tests:
+To run the local unit tests:
 
 ```text
 gradlew.bat :app:testDebugUnitTest
 ```
 
+To run the Compose UI tests on an emulator or connected Android device:
+
+```text
+gradlew.bat :app:connectedDebugAndroidTest
+```
+
 ## Next steps
 
-1. Add Room storage for saved APOD items.
-2. Add a quiz result and restart screen.
-3. Add lesson completion tracking.
-4. Add repository, DAO, ViewModel, and Compose UI tests.
+1. Add a quiz result and restart screen.
+2. Add lesson completion tracking.
+3. Improve offline handling for the NASA daily image.
+4. Add repository, DAO, and ViewModel tests.

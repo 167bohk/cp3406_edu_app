@@ -34,6 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,6 +75,11 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             NavigationBar {
                 navItems.forEach { item ->
                     NavigationBarItem(
+                        modifier = Modifier
+                            .testTag("nav_${item.route}")
+                            .semantics {
+                                contentDescription = "${item.title} tab"
+                            },
                         selected = currentRoute == item.route ||
                             (item.route == "learn" && currentRoute == "solar_system"),
                         onClick = {
@@ -150,7 +158,9 @@ private fun HomeScreen(
     onStartQuiz: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("home_screen"),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -240,7 +250,9 @@ private fun LearningScreen(
     val uriHandler = LocalUriHandler.current
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("learning_screen"),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -421,7 +433,9 @@ private fun QuizScreen(
     val question = viewModel.questions[uiState.questionIndex]
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("quiz_screen"),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -446,7 +460,9 @@ private fun QuizScreen(
             OutlinedButton(
                 onClick = { viewModel.selectAnswer(index) },
                 enabled = !uiState.answerSubmitted,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("answer_$index")
             ) {
                 val selectedText =
                     if (uiState.selectedAnswer == index) "Selected: " else ""
@@ -484,7 +500,9 @@ private fun QuizScreen(
                     }
                 },
                 enabled = uiState.selectedAnswer != null,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("quiz_action")
             ) {
                 Text(
                     if (uiState.answerSubmitted) "Next Question"
@@ -501,7 +519,9 @@ private fun StatsScreen(
     recentAttempts: List<QuizAttempt>
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("stats_screen"),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -592,6 +612,7 @@ private fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("settings_screen")
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -609,7 +630,8 @@ private fun SettingsScreen(
             Text("Sound effects")
             Switch(
                 checked = uiState.soundEnabled,
-                onCheckedChange = onSoundChanged
+                onCheckedChange = onSoundChanged,
+                modifier = Modifier.testTag("sound_switch")
             )
         }
 
@@ -623,6 +645,7 @@ private fun SettingsScreen(
                 FilterChip(
                     selected = uiState.difficulty == difficulty,
                     onClick = { onDifficultyChanged(difficulty) },
+                    modifier = Modifier.testTag("difficulty_${difficulty.lowercase()}"),
                     label = { Text(difficulty) }
                 )
             }
