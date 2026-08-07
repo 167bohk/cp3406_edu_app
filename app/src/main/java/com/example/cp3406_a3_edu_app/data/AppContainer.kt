@@ -8,6 +8,7 @@ interface AppContainer {
     val astronomyRepository: AstronomyRepository
     val apodRepository: ApodRepository
     val quizAttemptRepository: QuizAttemptRepository
+    val userPreferencesRepository: UserPreferencesRepository
 }
 
 class DefaultAppContainer(context: Context) : AppContainer {
@@ -21,4 +22,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val quizAttemptRepository: QuizAttemptRepository =
         OfflineQuizAttemptRepository(database.quizAttemptDao())
+
+    override val userPreferencesRepository: UserPreferencesRepository =
+        OfflineUserPreferencesRepository(context)
 }

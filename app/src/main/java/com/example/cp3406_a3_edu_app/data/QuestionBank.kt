@@ -1,6 +1,15 @@
 package com.example.cp3406_a3_edu_app.data
 
 object QuestionBank {
+    private val easyQuestionIds = setOf(
+        1, 2, 3, 4, 6, 7, 10, 11, 12, 18, 20, 23, 24, 27, 28,
+        46, 47, 50, 51, 54, 56
+    )
+    private val hardQuestionIds = setOf(
+        29, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44,
+        48, 49, 55, 59, 60
+    )
+
     private const val PLANET_SOURCE = "https://science.nasa.gov/solar-system/planets/"
     private const val MERCURY_SOURCE = "https://science.nasa.gov/mercury/facts/"
     private const val VENUS_SOURCE = "https://science.nasa.gov/venus/venus-facts/"
@@ -20,6 +29,10 @@ object QuestionBank {
     private const val COMET_SOURCE = "https://science.nasa.gov/solar-system/comets/facts/"
     private const val GALAXY_SOURCE = "https://science.nasa.gov/universe/galaxies/"
     private const val BLACK_HOLE_SOURCE = "https://science.nasa.gov/universe/black-holes/"
+    private const val STAR_SOURCE = "https://science.nasa.gov/universe/stars/"
+    private const val EXOPLANET_SOURCE = "https://science.nasa.gov/exoplanets/facts/"
+    private const val TELESCOPE_SOURCE =
+        "https://science.nasa.gov/mission/hubble/observatory/hubble-vs-webb/"
 
     val questions = listOf(
         SpaceQuestion(
@@ -467,6 +480,178 @@ object QuestionBank {
             explanation = "At Neptune's average distance, sunlight takes about four hours to arrive.",
             topic = "Planets",
             sourceUrl = NEPTUNE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 45,
+            prompt = "What process powers a main sequence star?",
+            answers = listOf("Nuclear fusion", "Burning coal", "Radio waves", "Planet collisions"),
+            correctAnswerIndex = 0,
+            explanation = "Nuclear fusion joins hydrogen nuclei to form helium and releases energy.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 46,
+            prompt = "Which two elements make up most stars?",
+            answers = listOf("Iron and nickel", "Hydrogen and helium", "Oxygen and carbon", "Gold and silver"),
+            correctAnswerIndex = 1,
+            explanation = "Stars are made mainly of hydrogen with a large amount of helium.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 47,
+            prompt = "Where do stars begin to form?",
+            answers = listOf("Inside planets", "In molecular clouds", "Inside black holes", "In asteroid belts"),
+            correctAnswerIndex = 1,
+            explanation = "Stars form from cold clouds of gas and dust called molecular clouds.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 48,
+            prompt = "What mainly determines how quickly a star uses its fuel?",
+            answers = listOf("Its number of planets", "Its colour name", "Its mass", "Its distance from Earth"),
+            correctAnswerIndex = 2,
+            explanation = "A star's mass determines how rapidly it uses its fuel and how long it lives.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 49,
+            prompt = "What can remain after a low-mass star loses its outer layers?",
+            answers = listOf("A white dwarf", "A new galaxy", "A gas giant", "An asteroid belt"),
+            correctAnswerIndex = 0,
+            explanation = "The remaining core of a low-mass star becomes a white dwarf.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 50,
+            prompt = "What is the huge explosion at the end of a massive star's life called?",
+            answers = listOf("A transit", "A supernova", "An eclipse", "A solar wind"),
+            correctAnswerIndex = 1,
+            explanation = "A massive star can end its life in a huge explosion called a supernova.",
+            topic = "Stars",
+            sourceUrl = STAR_SOURCE
+        ),
+        SpaceQuestion(
+            id = 51,
+            prompt = "What is an exoplanet?",
+            answers = listOf("A planet outside our Solar System", "A moon of Earth", "A type of galaxy", "A dead star"),
+            correctAnswerIndex = 0,
+            explanation = "An exoplanet is a planet outside our Solar System, usually orbiting another star.",
+            topic = "Exoplanets",
+            sourceUrl = EXOPLANET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 52,
+            prompt = "Which are the two main methods used to find exoplanets?",
+            answers = listOf(
+                "Transit and radial velocity",
+                "Radar and sonar",
+                "Eclipses and Moon phases",
+                "Rovers and landers"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Transit and radial velocity are the two main exoplanet detection methods.",
+            topic = "Exoplanets",
+            sourceUrl = EXOPLANET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 53,
+            prompt = "What happens to a star's brightness during an exoplanet transit?",
+            answers = listOf("It becomes slightly dimmer", "It doubles", "It turns green", "It disappears forever"),
+            correctAnswerIndex = 0,
+            explanation = "A planet passing in front of its star blocks a small amount of starlight.",
+            topic = "Exoplanets",
+            sourceUrl = EXOPLANET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 54,
+            prompt = "What is a star's habitable zone?",
+            answers = listOf(
+                "An area where liquid water could exist on a rocky planet",
+                "The hottest part of a star",
+                "A group of black holes",
+                "A planet's ring system"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "The habitable zone is the distance where liquid water could exist on a rocky planet's surface.",
+            topic = "Exoplanets",
+            sourceUrl = EXOPLANET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 55,
+            prompt = "What does the radial velocity method look for?",
+            answers = listOf("A star wobbling because of a planet", "A planet making sound", "A moon changing colour", "An asteroid burning"),
+            correctAnswerIndex = 0,
+            explanation = "An orbiting planet's gravity makes its star wobble and shifts the star's light spectrum.",
+            topic = "Exoplanets",
+            sourceUrl = EXOPLANET_SOURCE
+        ),
+        SpaceQuestion(
+            id = 56,
+            prompt = "Which telescope orbits Earth just above its atmosphere?",
+            answers = listOf("Hubble", "Webb", "Kepler rover", "Voyager station"),
+            correctAnswerIndex = 0,
+            explanation = "Hubble operates in low-Earth orbit above most of the atmosphere.",
+            topic = "Space Telescopes",
+            sourceUrl = TELESCOPE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 57,
+            prompt = "Why can Hubble take clearer images than many ground telescopes?",
+            answers = listOf(
+                "It is above Earth's blurring atmosphere",
+                "It is close to every star",
+                "It has no mirrors",
+                "It creates its own stars"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Hubble's position above the atmosphere avoids much atmospheric distortion.",
+            topic = "Space Telescopes",
+            sourceUrl = TELESCOPE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 58,
+            prompt = "Which kind of light is Webb mainly designed to observe?",
+            answers = listOf("Infrared light", "Only visible green light", "Sound waves", "Ocean waves"),
+            correctAnswerIndex = 0,
+            explanation = "Webb is designed for deep infrared observations.",
+            topic = "Space Telescopes",
+            sourceUrl = TELESCOPE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 59,
+            prompt = "Around which location does Webb orbit the Sun with Earth?",
+            answers = listOf("The L2 point", "The asteroid belt", "The Moon's surface", "Mars' north pole"),
+            correctAnswerIndex = 0,
+            explanation = "Webb travels around the Sun with Earth near the second Lagrange point, L2.",
+            topic = "Space Telescopes",
+            sourceUrl = TELESCOPE_SOURCE
+        ),
+        SpaceQuestion(
+            id = 60,
+            prompt = "Which statement correctly compares Hubble and Webb?",
+            answers = listOf(
+                "Webb has deeper infrared vision than Hubble",
+                "Hubble is a rover on Mars",
+                "Webb observes only radio waves",
+                "Both telescopes orbit the Moon"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Webb extends beyond Hubble's infrared range, while Hubble also observes visible and ultraviolet light.",
+            topic = "Space Telescopes",
+            sourceUrl = TELESCOPE_SOURCE
         )
-    )
+    ).map { question ->
+        question.copy(
+            difficulty = when (question.id) {
+                in easyQuestionIds -> "Easy"
+                in hardQuestionIds -> "Hard"
+                else -> "Medium"
+            }
+        )
+    }
 }

@@ -13,7 +13,8 @@ class AstronomyViewModelFactory(
             return AstronomyViewModel(
                 repository = container.astronomyRepository,
                 apodRepository = container.apodRepository,
-                quizAttemptRepository = container.quizAttemptRepository
+                quizAttemptRepository = container.quizAttemptRepository,
+                userPreferencesRepository = container.userPreferencesRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

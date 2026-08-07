@@ -7,7 +7,8 @@ data class SpaceQuestion(
     val correctAnswerIndex: Int,
     val explanation: String,
     val topic: String = "General",
-    val sourceUrl: String = ""
+    val sourceUrl: String = "",
+    val difficulty: String = "Medium"
 )
 
 data class LearningStats(
@@ -35,4 +36,15 @@ class DemoAstronomyRepository : AstronomyRepository {
 object QuizScorer {
     fun isCorrect(question: SpaceQuestion, selectedIndex: Int): Boolean =
         selectedIndex == question.correctAnswerIndex
+}
+
+object QuestionSelector {
+    fun select(
+        questions: List<SpaceQuestion>,
+        difficulty: String,
+        count: Int = 5
+    ): List<SpaceQuestion> {
+        val matchingQuestions = questions.filter { it.difficulty == difficulty }
+        return matchingQuestions.shuffled().take(count)
+    }
 }

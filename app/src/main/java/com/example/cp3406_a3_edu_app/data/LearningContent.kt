@@ -130,6 +130,49 @@ object LearningContent {
                 "Mission instruments send images and scientific measurements back to Earth."
             ),
             sourceUrl = "https://science.nasa.gov/science-missions/"
+        ),
+        LearningTopic(
+            id = 10,
+            title = "Star Life Cycles",
+            summary = "Follow a star from a cloud of gas to the end of its life.",
+            facts = listOf(
+                "Stars form inside cold clouds of gas and dust called molecular clouds.",
+                "Most stars are made mainly of hydrogen and helium.",
+                "A main-sequence star produces energy by fusing hydrogen into helium in its core.",
+                "A star's mass affects how quickly it uses fuel and how long it lives.",
+                "The core left by a low-mass star can become a white dwarf.",
+                "A massive star can end its life in a powerful explosion called a supernova."
+            ),
+            sourceUrl = "https://science.nasa.gov/universe/stars/",
+            questionIds = listOf(45, 46, 47, 48, 49, 50)
+        ),
+        LearningTopic(
+            id = 11,
+            title = "Exoplanets",
+            summary = "Learn how scientists find planets beyond our Solar System.",
+            facts = listOf(
+                "An exoplanet is a planet outside our Solar System, and most orbit other stars.",
+                "Transit and radial velocity are two important ways to detect exoplanets.",
+                "During a transit, a planet passes in front of its star and blocks a small amount of starlight.",
+                "The habitable zone is the distance from a star where liquid water could exist on a rocky planet's surface.",
+                "The radial velocity method looks for a small wobble in a star caused by an orbiting planet."
+            ),
+            sourceUrl = "https://science.nasa.gov/exoplanets/facts/",
+            questionIds = listOf(51, 52, 53, 54, 55)
+        ),
+        LearningTopic(
+            id = 12,
+            title = "Space Telescopes",
+            summary = "Compare how Hubble and Webb observe the universe from space.",
+            facts = listOf(
+                "Hubble orbits Earth above most of the atmosphere.",
+                "Working above the atmosphere helps Hubble avoid atmospheric blur and observe wavelengths blocked from the ground.",
+                "The James Webb Space Telescope is designed mainly to observe infrared light.",
+                "Webb operates near the Sun-Earth L2 point and travels around the Sun with Earth.",
+                "Webb observes deeper into infrared light, while Hubble also observes visible and ultraviolet light."
+            ),
+            sourceUrl = "https://science.nasa.gov/mission/hubble/observatory/hubble-vs-webb/",
+            questionIds = listOf(56, 57, 58, 59, 60)
         )
     )
 }

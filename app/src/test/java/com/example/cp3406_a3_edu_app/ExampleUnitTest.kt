@@ -1,6 +1,7 @@
 package com.example.cp3406_a3_edu_app
 
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.QuestionSelector
 import com.example.cp3406_a3_edu_app.data.QuestionBank
 import com.example.cp3406_a3_edu_app.data.LearningContent
 import com.example.cp3406_a3_edu_app.data.PlanetCatalog
@@ -33,19 +34,33 @@ class ExampleUnitTest {
     fun questionBank_hasValidQuestions() {
         val questions = QuestionBank.questions
 
-        assertEquals(44, questions.size)
+        assertEquals(60, questions.size)
         assertEquals(questions.size, questions.map { it.id }.distinct().size)
 
         questions.forEach { question ->
             assertEquals(4, question.answers.size)
             assertTrue(question.correctAnswerIndex in question.answers.indices)
             assertTrue(question.sourceUrl.startsWith("https://science.nasa.gov/"))
+            assertTrue(question.difficulty in listOf("Easy", "Medium", "Hard"))
+        }
+    }
+
+    @Test
+    fun questionSelector_usesTheSelectedDifficulty() {
+        listOf("Easy", "Medium", "Hard").forEach { difficulty ->
+            val selectedQuestions = QuestionSelector.select(
+                questions = QuestionBank.questions,
+                difficulty = difficulty
+            )
+
+            assertEquals(5, selectedQuestions.size)
+            assertTrue(selectedQuestions.all { it.difficulty == difficulty })
         }
     }
 
     @Test
     fun learningContent_hasFactsAndSources() {
-        assertEquals(9, LearningContent.topics.size)
+        assertEquals(12, LearningContent.topics.size)
 
         LearningContent.topics.forEach { topic ->
             assertTrue(topic.facts.isNotEmpty())

@@ -10,6 +10,9 @@ import com.example.cp3406_a3_edu_app.data.AstronomyRepository
 import com.example.cp3406_a3_edu_app.data.LearningStats
 import com.example.cp3406_a3_edu_app.data.QuizAttemptRepository
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.QuestionSelector
+import com.example.cp3406_a3_edu_app.data.SpaceQuestion
+import com.example.cp3406_a3_edu_app.data.UserPreferencesRepository
 import com.example.cp3406_a3_edu_app.data.local.QuizAttempt
 import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +40,16 @@ data class AstronomyUiState(
 class AstronomyViewModel(
     private val repository: AstronomyRepository,
     private val apodRepository: ApodRepository,
-    private val quizAttemptRepository: QuizAttemptRepository
+    private val quizAttemptRepository: QuizAttemptRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
-    val questions = repository.questions().shuffled().take(5)
+    private val allQuestions = repository.questions()
+
+    var questions: List<SpaceQuestion> by mutableStateOf(
+        QuestionSelector.select(allQuestions, difficulty = "Medium")
+    )
+        private set
+
     val learningTopics = repository.learningTopics()
     val planets = repository.planets()
 
@@ -52,6 +62,33 @@ class AstronomyViewModel(
     init {
         loadAstronomyPicture()
         observeQuizHistory()
+        observeUserPreferences()
+    }
+
+    private fun observeUserPreferences() {
+        viewModelScope.launch {
+            userPreferencesRepository.preferences.collect { preferences ->
+                val difficultyChanged =
+                    preferences.difficulty != _uiState.value.difficulty
+
+                if (difficultyChanged) {
+                    questions = QuestionSelector.select(
+                        questions = allQuestions,
+                        difficulty = preferences.difficulty
+                    )
+                }
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        questionIndex = if (difficultyChanged) 0 else currentState.questionIndex,
+                        selectedAnswer = if (difficultyChanged) null else currentState.selectedAnswer,
+                        answerSubmitted = if (difficultyChanged) false else currentState.answerSubmitted,
+                        soundEnabled = preferences.soundEnabled,
+                        difficulty = preferences.difficulty
+                    )
+                }
+            }
+        }
     }
 
     private fun observeQuizHistory() {
@@ -120,6 +157,15 @@ class AstronomyViewModel(
         }
     }
 
-    fun setSound(enabled: Boolean) = _uiState.update { it.copy(soundEnabled = enabled) }
-    fun setDifficulty(value: String) = _uiState.update { it.copy(difficulty = value) }
+    fun setSound(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveSoundEnabled(enabled)
+        }
+    }
+
+    fun setDifficulty(value: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveDifficulty(value)
+        }
+    }
 }

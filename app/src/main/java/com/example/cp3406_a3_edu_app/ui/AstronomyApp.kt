@@ -218,7 +218,7 @@ private fun HomeScreen(
                         text = "Learning Library",
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text("Read nine short lessons before testing your knowledge.")
+                    Text("Read twelve short lessons before testing your knowledge.")
                     OutlinedButton(
                         onClick = onOpenLearning,
                         modifier = Modifier.fillMaxWidth()
@@ -429,6 +429,11 @@ private fun QuizScreen(
             Text(
                 text = "Question ${uiState.questionIndex + 1} of ${viewModel.questions.size}",
                 color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "${uiState.difficulty} difficulty",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = question.prompt,
