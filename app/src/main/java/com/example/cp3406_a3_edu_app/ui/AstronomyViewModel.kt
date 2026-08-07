@@ -9,6 +9,7 @@ import com.example.cp3406_a3_edu_app.data.ApodRepository
 import com.example.cp3406_a3_edu_app.data.AstronomyRepository
 import com.example.cp3406_a3_edu_app.data.LearningStats
 import com.example.cp3406_a3_edu_app.data.QuizAttemptRepository
+import com.example.cp3406_a3_edu_app.data.QuizAnswerResult
 import com.example.cp3406_a3_edu_app.data.QuizScorer
 import com.example.cp3406_a3_edu_app.data.QuestionSelector
 import com.example.cp3406_a3_edu_app.data.SpaceQuestion
@@ -34,7 +35,9 @@ data class AstronomyUiState(
     val stats: LearningStats = LearningStats(),
     val recentAttempts: List<QuizAttempt> = emptyList(),
     val soundEnabled: Boolean = true,
-    val difficulty: String = "Medium"
+    val difficulty: String = "Medium",
+    val quizAnswers: List<QuizAnswerResult> = emptyList(),
+    val quizFinished: Boolean = false
 )
 
 class AstronomyViewModel(
@@ -83,6 +86,8 @@ class AstronomyViewModel(
                         questionIndex = if (difficultyChanged) 0 else currentState.questionIndex,
                         selectedAnswer = if (difficultyChanged) null else currentState.selectedAnswer,
                         answerSubmitted = if (difficultyChanged) false else currentState.answerSubmitted,
+                        quizAnswers = if (difficultyChanged) emptyList() else currentState.quizAnswers,
+                        quizFinished = if (difficultyChanged) false else currentState.quizFinished,
                         soundEnabled = preferences.soundEnabled,
                         difficulty = preferences.difficulty
                     )
@@ -130,7 +135,10 @@ class AstronomyViewModel(
         val correct = QuizScorer.isCorrect(question, selected)
 
         _uiState.update {
-            it.copy(answerSubmitted = true)
+            it.copy(
+                answerSubmitted = true,
+                quizAnswers = it.quizAnswers + QuizAnswerResult(question, selected)
+            )
         }
 
         viewModelScope.launch {
@@ -149,10 +157,30 @@ class AstronomyViewModel(
     fun nextQuestion() {
         val isLast = _uiState.value.questionIndex == questions.lastIndex
         _uiState.update {
+            if (isLast) {
+                it.copy(quizFinished = true)
+            } else {
+                it.copy(
+                    questionIndex = it.questionIndex + 1,
+                    selectedAnswer = null,
+                    answerSubmitted = false
+                )
+            }
+        }
+    }
+
+    fun restartQuiz() {
+        questions = QuestionSelector.select(
+            questions = allQuestions,
+            difficulty = _uiState.value.difficulty
+        )
+        _uiState.update {
             it.copy(
-                questionIndex = if (isLast) 0 else it.questionIndex + 1,
+                questionIndex = 0,
                 selectedAnswer = null,
-                answerSubmitted = false
+                answerSubmitted = false,
+                quizAnswers = emptyList(),
+                quizFinished = false
             )
         }
     }

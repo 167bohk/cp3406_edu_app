@@ -1,6 +1,8 @@
 package com.example.cp3406_a3_edu_app
 
 import com.example.cp3406_a3_edu_app.data.QuizScorer
+import com.example.cp3406_a3_edu_app.data.QuizAnswerResult
+import com.example.cp3406_a3_edu_app.data.QuizResultCalculator
 import com.example.cp3406_a3_edu_app.data.QuestionSelector
 import com.example.cp3406_a3_edu_app.data.QuestionBank
 import com.example.cp3406_a3_edu_app.data.LearningContent
@@ -28,6 +30,26 @@ class ExampleUnitTest {
 
         assertTrue(QuizScorer.isCorrect(question, 1))
         assertFalse(QuizScorer.isCorrect(question, 0))
+    }
+
+    @Test
+    fun quizResultCalculator_returnsScoreAndAccuracy() {
+        val question = SpaceQuestion(
+            id = 1,
+            prompt = "Test",
+            answers = listOf("Wrong", "Correct"),
+            correctAnswerIndex = 1,
+            explanation = "Test explanation"
+        )
+        val answers = listOf(
+            QuizAnswerResult(question, selectedAnswerIndex = 1),
+            QuizAnswerResult(question.copy(id = 2), selectedAnswerIndex = 0),
+            QuizAnswerResult(question.copy(id = 3), selectedAnswerIndex = 1)
+        )
+
+        assertEquals(2, QuizResultCalculator.score(answers))
+        assertEquals(66, QuizResultCalculator.accuracy(answers))
+        assertEquals(1, answers.count { !it.isCorrect })
     }
 
     @Test

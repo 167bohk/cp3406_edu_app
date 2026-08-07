@@ -18,6 +18,8 @@ Compose for CP3406 Assessment 3.
 - A bank of 60 astronomy questions with explanations
 - Five randomly selected questions in each quiz
 - Easy, Medium, and Hard question selection
+- Quiz results with score, accuracy, difficulty, and incorrect-answer review
+- Try Again, Review Lessons, and View Statistics actions after each quiz
 - Persistent sound and difficulty settings using Preferences DataStore
 - Room database storage for every quiz answer
 - Persistent accuracy, answer totals, and completed quiz statistics
@@ -93,7 +95,6 @@ gradlew.bat :app:connectedDebugAndroidTest
 
 ## Next steps
 
-1. Add a quiz result and restart screen.
-2. Add lesson completion tracking.
-3. Improve offline handling for the NASA daily image.
-4. Add repository, DAO, and ViewModel tests.
+1. Add lesson completion tracking.
+2. Improve offline handling for the NASA daily image.
+3. Add repository, DAO, and ViewModel tests.

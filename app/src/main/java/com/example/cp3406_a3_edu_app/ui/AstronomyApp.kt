@@ -47,6 +47,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.cp3406_a3_edu_app.data.LearningTopic
 import com.example.cp3406_a3_edu_app.data.LearningStats
+import com.example.cp3406_a3_edu_app.data.QuizAnswerResult
+import com.example.cp3406_a3_edu_app.data.QuizResultCalculator
 import com.example.cp3406_a3_edu_app.data.local.QuizAttempt
 import com.example.cp3406_a3_edu_app.data.network.ApodPhoto
 
@@ -127,7 +129,9 @@ fun AstronomyApp(viewModel: AstronomyViewModel) {
             composable("quiz") {
                 QuizScreen(
                     viewModel = viewModel,
-                    uiState = uiState
+                    uiState = uiState,
+                    onReviewLessons = { navController.navigate("learn") },
+                    onViewStatistics = { navController.navigate("stats") }
                 )
             }
 
@@ -428,8 +432,21 @@ private fun ApodCard(photo: ApodPhoto) {
 @Composable
 private fun QuizScreen(
     viewModel: AstronomyViewModel,
-    uiState: AstronomyUiState
+    uiState: AstronomyUiState,
+    onReviewLessons: () -> Unit,
+    onViewStatistics: () -> Unit
 ) {
+    if (uiState.quizFinished) {
+        QuizResultScreen(
+            answers = uiState.quizAnswers,
+            difficulty = uiState.difficulty,
+            onTryAgain = viewModel::restartQuiz,
+            onReviewLessons = onReviewLessons,
+            onViewStatistics = onViewStatistics
+        )
+        return
+    }
+
     val question = viewModel.questions[uiState.questionIndex]
 
     LazyColumn(
@@ -505,9 +522,122 @@ private fun QuizScreen(
                     .testTag("quiz_action")
             ) {
                 Text(
-                    if (uiState.answerSubmitted) "Next Question"
-                    else "Submit Answer"
+                    when {
+                        !uiState.answerSubmitted -> "Submit Answer"
+                        uiState.questionIndex == viewModel.questions.lastIndex -> "View Results"
+                        else -> "Next Question"
+                    }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuizResultScreen(
+    answers: List<QuizAnswerResult>,
+    difficulty: String,
+    onTryAgain: () -> Unit,
+    onReviewLessons: () -> Unit,
+    onViewStatistics: () -> Unit
+) {
+    val score = QuizResultCalculator.score(answers)
+    val accuracy = QuizResultCalculator.accuracy(answers)
+    val incorrectAnswers = answers.filter { !it.isCorrect }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("quiz_result_screen"),
+        contentPadding = PaddingValues(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
+            Text(
+                text = "Quiz Complete!",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text("You finished all ${answers.size} questions.")
+        }
+
+        item {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "$score / ${answers.size}",
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text("Accuracy: $accuracy%")
+                    Text("Difficulty: $difficulty")
+                }
+            }
+        }
+
+        item {
+            Text(
+                text = "Review incorrect answers",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        if (incorrectAnswers.isEmpty()) {
+            item {
+                Text("Perfect score! There are no incorrect answers to review.")
+            }
+        } else {
+            items(incorrectAnswers, key = { it.question.id }) { answer ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = answer.question.prompt,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text("Your answer: ${answer.question.answers[answer.selectedAnswerIndex]}")
+                        Text(
+                            text = "Correct answer: ${answer.question.answers[answer.question.correctAnswerIndex]}",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(answer.question.explanation)
+                    }
+                }
+            }
+        }
+
+        item {
+            Button(
+                onClick = onTryAgain,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("quiz_try_again")
+            ) {
+                Text("Try Again")
+            }
+        }
+
+        item {
+            OutlinedButton(
+                onClick = onReviewLessons,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Review Lessons")
+            }
+        }
+
+        item {
+            OutlinedButton(
+                onClick = onViewStatistics,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("View Statistics")
             }
         }
     }

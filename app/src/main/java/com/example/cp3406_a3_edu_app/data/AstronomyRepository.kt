@@ -38,6 +38,22 @@ object QuizScorer {
         selectedIndex == question.correctAnswerIndex
 }
 
+data class QuizAnswerResult(
+    val question: SpaceQuestion,
+    val selectedAnswerIndex: Int
+) {
+    val isCorrect: Boolean
+        get() = selectedAnswerIndex == question.correctAnswerIndex
+}
+
+object QuizResultCalculator {
+    fun score(answers: List<QuizAnswerResult>): Int =
+        answers.count { it.isCorrect }
+
+    fun accuracy(answers: List<QuizAnswerResult>): Int =
+        if (answers.isEmpty()) 0 else score(answers) * 100 / answers.size
+}
+
 object QuestionSelector {
     fun select(
         questions: List<SpaceQuestion>,

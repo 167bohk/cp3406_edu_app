@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -62,7 +63,12 @@ class ExampleInstrumentedTest {
     fun settings_canSelectHardDifficulty() {
         composeTestRule.onNodeWithTag("nav_settings").performClick()
         composeTestRule.onNodeWithTag("difficulty_hard").performClick()
-        composeTestRule.waitForIdle()
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            composeTestRule
+                .onNodeWithTag("difficulty_hard")
+                .fetchSemanticsNode()
+                .config[SemanticsProperties.Selected]
+        }
 
         composeTestRule.onNodeWithTag("difficulty_hard").assertIsSelected()
     }
@@ -78,5 +84,45 @@ class ExampleInstrumentedTest {
 
         composeTestRule.onNodeWithTag("quiz_action").performClick()
         composeTestRule.onNodeWithText("Question 2 of 5").assertIsDisplayed()
+    }
+
+    @Test
+    fun quiz_showsResultAndCanStartAgain() {
+        composeTestRule.onNodeWithTag("nav_quiz").performClick()
+
+        repeat(5) { questionIndex ->
+            composeTestRule.onNodeWithTag("answer_0").performClick()
+            composeTestRule.onNodeWithTag("quiz_action").performClick()
+
+            if (questionIndex < 4) {
+                composeTestRule.onNodeWithText("Next Question").performClick()
+            } else {
+                composeTestRule.onNodeWithText("View Results").performClick()
+            }
+        }
+
+        composeTestRule.onNodeWithTag("quiz_result_screen").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Quiz Complete!").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Accuracy:", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Difficulty:", substring = true).assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithTag("quiz_result_screen")
+            .performScrollToNode(hasText("Try Again"))
+        composeTestRule.onNodeWithTag("quiz_try_again").assertIsDisplayed()
+        composeTestRule
+            .onNodeWithTag("quiz_result_screen")
+            .performScrollToNode(hasText("Review Lessons"))
+        composeTestRule.onNodeWithText("Review Lessons").assertIsDisplayed()
+        composeTestRule
+            .onNodeWithTag("quiz_result_screen")
+            .performScrollToNode(hasText("View Statistics"))
+        composeTestRule.onNodeWithText("View Statistics").assertIsDisplayed()
+        composeTestRule
+            .onNodeWithTag("quiz_result_screen")
+            .performScrollToNode(hasText("Try Again"))
+        composeTestRule.onNodeWithTag("quiz_try_again").performClick()
+
+        composeTestRule.onNodeWithText("Question 1 of 5").assertIsDisplayed()
     }
 }
